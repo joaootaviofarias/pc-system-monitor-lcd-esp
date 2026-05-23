@@ -1,6 +1,6 @@
 # PC System Monitor LCD
 
-A real-time PC hardware and weather monitor built with an ESP32, an LCD display, and a C# background worker designed for Linux.
+A real-time PC hardware monitor built with an ESP32, an LCD display, and a C# background worker designed for Linux.
 
 ![Monitor](images/monitor.jpg)
 ![Clock](images/clock.jpg)
