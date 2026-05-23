@@ -15,7 +15,7 @@ The microcontroller runs a graphical UI (powered by LVGL) to display system metr
 - **Smart Sleep Mode:** Automatically transitions to a Clock screen when the PC goes to sleep and serial data stops.
 - **Auto-Reconnect:** Smoothly handles the PC waking up from suspend and instantly resumes displaying hardware metrics.
 
-## 🖥️ C# PC Worker
+## 🖥️ C# PC Worker [pc-system-monitor-lcd-worker](https://github.com/joaootaviofarias/pc-system-monitor-lcd-worker)
 
 The Linux host agent gathers system metrics and sends them over USB Serial to the ESP32. It uses `/dev/serial/by-id/` to guarantee it always connects to the correct display, and handles OS suspend/resume gracefully.
 
