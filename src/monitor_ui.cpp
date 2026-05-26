@@ -4,6 +4,7 @@
 
 LV_FONT_DECLARE(lv_font_orbitron_bold_36);
 LV_FONT_DECLARE(lv_font_orbitron_medium_12);
+LV_FONT_DECLARE(lv_font_orbitron_bold_12);
 LV_FONT_DECLARE(lv_font_phosphor_24);
 
 #define C_CPU    lv_color_make(  0, 136, 255)
@@ -111,125 +112,27 @@ static void animate_arc_value(lv_obj_t * arc, int32_t new_value) {
     lv_anim_start(&a);
 }
 
-static void create_chart_separator(lv_obj_t *parent)
-{
-    // =========================
-    // TOP LINE
-    // =========================
-
-    static lv_point_t top_line[] = {
-        {0, 0},
-        {120, 0}
-    };
-
-    lv_obj_t *l_top = lv_line_create(parent);
-    lv_line_set_points(l_top, top_line, 2);
-
-    lv_obj_set_style_line_color(l_top, C_CPU, 0);
-    lv_obj_set_style_line_width(l_top, 4, 0);
-    lv_obj_set_style_line_opa(l_top, LV_OPA_80, 0);
-
-    lv_obj_align(l_top, LV_ALIGN_CENTER, 1, 45);
-
-    // =========================
-    // LEFT LINE
-    // =========================
-
-    static lv_point_t left_line[] = {
-        {0, 0},
-        {0, 50}
-    };
-
-    lv_obj_t *l_left = lv_line_create(parent);
-    lv_line_set_points(l_left, left_line, 2);
-
-    lv_obj_set_style_line_color(l_left, C_CPU, 0);
-    lv_obj_set_style_line_width(l_left, 2, 0);
-    lv_obj_set_style_line_opa(l_left, LV_OPA_40, 0);
-
-    lv_obj_align(l_left, LV_ALIGN_CENTER, -59, 70);
-
-    // =========================
-    // RIGHT LINE
-    // =========================
-
-    static lv_point_t right_line[] = {
-        {0, 0},
-        {0, 50}
-    };
-
-    lv_obj_t *l_right = lv_line_create(parent);
-    lv_line_set_points(l_right, right_line, 2);
-
-    lv_obj_set_style_line_color(l_right, C_CPU, 0);
-    lv_obj_set_style_line_width(l_right, 2, 0);
-    lv_obj_set_style_line_opa(l_right, LV_OPA_40, 0);
-
-    lv_obj_align(l_right, LV_ALIGN_CENTER, 61, 70);
-
-    // =========================
-    // BOTTOM LINE
-    // =========================
-
-    static lv_point_t bottom_line[] = {
-        {0, 0},
-        {120, 0}
-    };
-
-    lv_obj_t *l_bottom = lv_line_create(parent);
-    lv_line_set_points(l_bottom, bottom_line, 2);
-
-    lv_obj_set_style_line_color(l_bottom, C_CPU, 0);
-    lv_obj_set_style_line_width(l_bottom, 2, 0);
-    lv_obj_set_style_line_opa(l_bottom, LV_OPA_40, 0);
-
-    lv_obj_align(l_bottom, LV_ALIGN_CENTER, 1, 96);
-
-    // =========================
-    // DECORATIVE SCAN BARS
-    // =========================
-
-    for(int i = 0; i < 4; i++) {
-
-        lv_obj_t *bar = lv_obj_create(parent);
-
-        lv_obj_set_size(bar, 4, 2);
-
-        lv_obj_set_style_bg_color(bar, C_CPU, 0);
-        lv_obj_set_style_bg_opa(bar, LV_OPA_80, 0);
-
-        lv_obj_set_style_border_width(bar, 0, 0);
-        lv_obj_set_style_radius(bar, 0, 0);
-
-        lv_obj_align_to(bar,
-                         l_top,
-                         LV_ALIGN_TOP_LEFT,
-                         (i * 6),
-                         -4);
-    }
-}
-
 void monitor_ui_init(void) {
     scr_monitor = lv_obj_create(NULL);
     lv_obj_set_style_bg_color(scr_monitor, C_BG, 0);
 
     // Split 270 degrees into 3 equal 85-degree sections with 5-degree gaps
     // LVGL angles: 0=Right, 90=Bottom, 180=Left, 270=Top
-    arc_cpu = create_arc(scr_monitor, SZ_ARC, C_CPU, 0, 135, 215);
-    arc_gpu = create_arc(scr_monitor, SZ_ARC, C_GPU, 0, 225, 305);
-    arc_ram = create_arc(scr_monitor, SZ_ARC, C_RAM, 0, 315, 35);
+    arc_cpu = create_arc(scr_monitor, SZ_ARC, C_CPU, 0, 140, 220);
+    arc_gpu = create_arc(scr_monitor, SZ_ARC, C_GPU, 0, 230, 310);
+    arc_ram = create_arc(scr_monitor, SZ_ARC, C_RAM, 0, 320, 40);
 
     lv_obj_t *lbl_cpu_tag = create_fa_icon(scr_monitor, FA_CPU, C_CPU);
     lv_obj_t *lbl_gpu_tag = create_fa_icon(scr_monitor, FA_GPU, C_GPU);
     lv_obj_t *lbl_ram_tag = create_fa_icon(scr_monitor, FA_RAM, C_RAM);   
     
-    lbl_cpu_val = create_val_label(scr_monitor, "0%", C_CPU, &lv_font_orbitron_medium_12);
-    lbl_gpu_val = create_val_label(scr_monitor, "0%", C_GPU, &lv_font_orbitron_medium_12);
-    lbl_ram_val = create_val_label(scr_monitor, "0%", C_RAM, &lv_font_orbitron_medium_12);
+    lbl_cpu_val = create_val_label(scr_monitor, "0%", C_CPU, &lv_font_orbitron_bold_12);
+    lbl_gpu_val = create_val_label(scr_monitor, "0%", C_GPU, &lv_font_orbitron_bold_12);
+    lbl_ram_val = create_val_label(scr_monitor, "0%", C_RAM, &lv_font_orbitron_bold_12);
 
     // CPU (135 deg): x = 80 * cos(135) = -56, y = 80 * sin(135) = 56
     lv_obj_align(lbl_cpu_tag, LV_ALIGN_CENTER, -82,  -8);
-    lv_obj_align(lbl_cpu_val, LV_ALIGN_CENTER, -82,   8);
+    lv_obj_align(lbl_cpu_val, LV_ALIGN_CENTER, -82,   9);
 
     // GPU (225 deg): x = 80 * cos(225) = -56, y = 80 * sin(225) = -56
     lv_obj_align(lbl_gpu_tag, LV_ALIGN_CENTER,   0, -82);
@@ -250,7 +153,6 @@ void monitor_ui_init(void) {
     // CHART
     // =========================
 
-    //create_chart_separator(scr_monitor);
     chart = lv_chart_create(scr_monitor);
 
     lv_obj_set_size(chart, 120, 50);
@@ -258,17 +160,20 @@ void monitor_ui_init(void) {
 
     lv_obj_set_style_bg_color(chart, C_CPU, LV_PART_MAIN);
     lv_obj_set_style_bg_opa(chart, LV_OPA_0, LV_PART_MAIN);
-
-    lv_obj_set_style_border_color(chart, C_CPU, LV_PART_MAIN);
-    lv_obj_set_style_border_width(chart, 1, LV_PART_MAIN);
-    lv_obj_set_style_border_opa(chart, LV_OPA_40, LV_PART_MAIN);
-
     lv_obj_set_style_radius(chart, 0, LV_PART_MAIN);
-    lv_obj_set_style_border_width(chart, 0, 0);
-    lv_obj_set_style_line_width(chart, 0, LV_PART_MAIN);
+
+    // --- THE FIX: Remove the manual border completely! ---
+    // LVGL's tick system draws the vertical line automatically.
+    lv_obj_set_style_border_width(chart, 0, LV_PART_MAIN); 
+
+    // Add exactly 2px padding on all sides so the 2px tick lines 
+    // don't get clipped by the widget's bounding box.
+    lv_obj_set_style_pad_top(chart, 2, LV_PART_MAIN);
+    lv_obj_set_style_pad_bottom(chart, 2, LV_PART_MAIN);
+    lv_obj_set_style_pad_left(chart, 10, LV_PART_MAIN);
+    lv_obj_set_style_pad_right(chart, 10, LV_PART_MAIN);
 
     lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
-
     lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, 0, 100);
 
     lv_chart_set_point_count(chart, 40);
@@ -277,7 +182,15 @@ void monitor_ui_init(void) {
     // Hide divisions/grid
     lv_chart_set_div_line_count(chart, 0, 0);
 
-    // Smooth lines
+    // Ticks (Length of -8px pointing inward). This ALSO draws the vertical spine!
+    lv_chart_set_axis_tick(chart, LV_CHART_AXIS_PRIMARY_Y, -6, 0, 3, 1, false, 10);
+    lv_chart_set_axis_tick(chart, LV_CHART_AXIS_SECONDARY_Y, -6, 0, 3, 1, false, 10);
+
+    // Style the markers AND the vertical lines together
+    lv_obj_set_style_line_color(chart, lv_color_white(), LV_PART_TICKS);
+    lv_obj_set_style_line_width(chart, 2, LV_PART_TICKS);
+
+    // Smooth lines (Data series lines)
     lv_obj_set_style_line_width(chart, 2, LV_PART_ITEMS);
 
     // Remove points
@@ -317,7 +230,7 @@ void monitor_ui_update(const monitor_data_t *data) {
 
     snprintf(buf, sizeof(buf), "%d%%", data->cpu_pct);
     lv_label_set_text(lbl_cpu_val, buf);
-    lv_obj_align(lbl_cpu_val, LV_ALIGN_CENTER, -82, 8);
+    lv_obj_align(lbl_cpu_val, LV_ALIGN_CENTER, -82, 9);
 
     snprintf(buf, sizeof(buf), "%d%%", data->gpu_pct);
     lv_label_set_text(lbl_gpu_val, buf);

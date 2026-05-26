@@ -32,7 +32,9 @@ void clock_ui_init(void) {
     lv_arc_set_range(arc_seconds, 0, 60);
 
     // Disable the background track (make it invisible)
-    lv_obj_set_style_arc_width(arc_seconds, 0, LV_PART_MAIN);
+    lv_obj_set_style_arc_width(arc_seconds, 2, LV_PART_MAIN);
+    lv_obj_set_style_arc_color(arc_seconds, lv_color_hex(0xFFFFFF), LV_PART_MAIN);
+    lv_obj_set_style_arc_rounded(arc_seconds, false, LV_PART_MAIN);
 
     // Style the sweeping indicator
     lv_obj_set_style_arc_color(arc_seconds, lv_color_hex(0xFFFFFF), LV_PART_INDICATOR);
@@ -42,7 +44,7 @@ void clock_ui_init(void) {
     lv_obj_set_style_shadow_color(arc_seconds, lv_color_hex(0xFFFFFF), LV_PART_INDICATOR);
     lv_obj_set_style_shadow_width(arc_seconds, 15, LV_PART_INDICATOR);
     lv_obj_set_style_shadow_spread(arc_seconds, 1, LV_PART_INDICATOR);
-     lv_obj_set_style_arc_rounded(arc_seconds, false, LV_PART_INDICATOR);
+    lv_obj_set_style_arc_rounded(arc_seconds, false, LV_PART_INDICATOR);
 
     lv_obj_remove_style(arc_seconds, NULL, LV_PART_KNOB);
     lv_obj_clear_flag(arc_seconds, LV_OBJ_FLAG_CLICKABLE);
