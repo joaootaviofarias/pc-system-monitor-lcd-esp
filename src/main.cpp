@@ -3,9 +3,10 @@
 #include <TFT_eSPI.h>
 #include <lvgl.h>
 
-extern "C" {
+#include "shared_types.h"
+#include "wait_ui.h"
+#include "clock_ui.h"
 #include "monitor_ui.h"
-}
 
 #define DISP_W     240
 #define DISP_H     240
@@ -30,11 +31,7 @@ static uint8_t  clk_second = 0;
 static uint32_t last_clock_tick_ms = 0;
 static bool     has_time_sync = false;
 
-
-static void disp_flush_cb(lv_disp_drv_t *drv,
-                           const lv_area_t *area,
-                           lv_color_t      *color_p)
-{
+static void disp_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color_p) {
     uint32_t w = (uint32_t)(area->x2 - area->x1 + 1);
     uint32_t h = (uint32_t)(area->y2 - area->y1 + 1);
 
@@ -46,16 +43,14 @@ static void disp_flush_cb(lv_disp_drv_t *drv,
     lv_disp_flush_ready(drv);
 }
 
-static void lvgl_tick_task(void * /*arg*/)
-{
+static void lvgl_tick_task(void * /*arg*/) {
     for (;;) {
         vTaskDelay(pdMS_TO_TICKS(5));
         lv_tick_inc(5);
     }
 }
 
-static bool process_serial_input(monitor_data_t *out_data)
-{
+static bool process_serial_input(monitor_data_t *out_data) {
     static char rxbuf[48];
     static int  rxpos = 0;
     bool new_packet_parsed = false;
@@ -84,8 +79,7 @@ static bool process_serial_input(monitor_data_t *out_data)
     return new_packet_parsed;
 }
 
-void setup(void)
-{
+void setup(void) {
     Serial.begin(115200);
     Serial.println("[monitor] booting");
 
@@ -111,12 +105,18 @@ void setup(void)
         NULL, 1
     );
 
+    // Initialize all UIs
+    wait_ui_init();
+    clock_ui_init();
     monitor_ui_init();
+    
+    // Start on the Wait Screen
+    wait_ui_show();
+    
     Serial.println("[monitor] UI Multi-Screen Environment Ready");
 }
 
-void loop(void)
-{
+void loop(void) {
     monitor_data_t stats;
     uint32_t now = millis();
 
@@ -130,7 +130,7 @@ void loop(void)
         has_time_sync = true;
 
         if (current_state != STATE_MONITOR) {
-            ui_show_monitor();
+            monitor_ui_show();
             current_state = STATE_MONITOR;
         }
         monitor_ui_update(&stats);
@@ -138,10 +138,11 @@ void loop(void)
 
     if (current_state == STATE_MONITOR && (now - last_packet_time > 3000)) {
         if (has_time_sync) {
-            ui_show_clock(clk_hour, clk_minute);
+            clock_ui_update(clk_hour, clk_minute, clk_second);
+            clock_ui_show();
             current_state = STATE_CLOCK;
         } else {
-            ui_show_wait();
+            wait_ui_show();
             current_state = STATE_WAITING;
         }
     }
@@ -160,8 +161,9 @@ void loop(void)
                     clk_minute %= 60;
                     if (clk_hour >= 24) clk_hour %= 24;
                 }
-                ui_show_clock(clk_hour, clk_minute);
             }
+
+            clock_ui_update(clk_hour, clk_minute, clk_second);
         }
     }
 

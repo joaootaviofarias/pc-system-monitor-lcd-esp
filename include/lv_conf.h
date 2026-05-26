@@ -22,7 +22,6 @@
 #define LV_MEM_SIZE        (32U * 1024U)
 #define LV_MEM_ADR         0
 
-#define LV_USE_SPINNER
-
+#define LV_USE_SPINNER  1
 
 #endif /*LV_CONF_H*/
